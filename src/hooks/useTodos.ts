@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../modules'
 import { onSnapshot } from '../api/todos'
-import { setTodos, setLoading } from '../modules/todos'
+import { setTodos, setLoading, setError } from '../modules/todos'
 import { AppDispatch } from '..'
 
 export default function useTodos() {
@@ -12,13 +12,18 @@ export default function useTodos() {
 
   useEffect(() => {
     dispatch(setLoading(true))
-    const unsubscribe = onSnapshot(todos => {
-      dispatch(setTodos(todos))
-      if (!isLoaded.current) {
-        isLoaded.current = true
-        dispatch(setLoading(false))
-      }
-    })
+    const unsubscribe = onSnapshot(
+      todos => {
+        dispatch(setTodos(todos))
+        if (!isLoaded.current) {
+          isLoaded.current = true
+          dispatch(setLoading(false))
+        }
+      },
+      error => {
+        dispatch(setError(error))
+      },
+    )
     return unsubscribe
   }, [dispatch])
 

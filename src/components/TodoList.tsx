@@ -1,20 +1,17 @@
+import { List } from '@material-ui/core'
 import React from 'react'
-import TodoItem from './TodoItem'
 import useTodos from '../hooks/useTodos'
+import TodoItem from './TodoItem'
 
 function TodoList() {
   const { todos } = useTodos()
 
-  // useEffect(() => {
-  //   console.log(111)
-  // }, [todos])
-
   return (
-    <ul>
+    <List>
       {todos.map(todo => (
         <TodoItem todo={todo} key={todo.id} />
       ))}
-    </ul>
+    </List>
   )
 }
 

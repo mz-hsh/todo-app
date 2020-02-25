@@ -1,7 +1,7 @@
 import firebase from '../firebase'
 
-const db = firebase.firestore()
 const collectionPath = 'todos'
+const db = firebase.firestore()
 
 export interface Todo {
   id: string
@@ -22,12 +22,9 @@ export const onSnapshot = (
     .collection(collectionPath)
     .orderBy('createdAt')
     .onSnapshot(querySnapshot => {
-      console.log(querySnapshot)
-      // if (querySnapshot.metadata.hasPendingWrites) return
       const todos = querySnapshot.docs.map(
         (doc): Todo => {
           const data = doc.data()
-          console.log(data)
           return {
             id: doc.id,
             data: {
@@ -42,7 +39,7 @@ export const onSnapshot = (
     }, onError)
 }
 
-export const add = async (data: TodoData): Promise<string> => {
+export const addTodo = async (data: TodoData): Promise<string> => {
   const { id } = await db.collection(collectionPath).add({
     ...data,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -50,6 +47,16 @@ export const add = async (data: TodoData): Promise<string> => {
   return id
 }
 
-export const update = async (id: string, data: TodoData): Promise<void> => {
+export const updateTodo = async (id: string, data: TodoData): Promise<void> => {
   return db.doc(`${collectionPath}/${id}`).update(data)
+}
+
+export const deleteTodo = async (id: string): Promise<void> => {
+  return db.doc(`${collectionPath}/${id}`).delete()
+}
+
+export default {
+  addTodo,
+  updateTodo,
+  deleteTodo,
 }

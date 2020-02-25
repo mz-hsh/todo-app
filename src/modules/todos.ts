@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Todo, TodoData, add, update } from '../api/todos'
+import todoAPI, { Todo, TodoData } from '../api/todos'
 import { AppThunk } from '..'
 
 interface TodosState {
@@ -35,7 +35,7 @@ const todosSlice = createSlice({
 export const addTodo = (data: TodoData): AppThunk => async dispatch => {
   try {
     dispatch(setLoading(true))
-    await add(data)
+    await todoAPI.addTodo(data)
   } catch (error) {
     dispatch(setError(error))
   } finally {
@@ -53,17 +53,28 @@ export const toggleTodo = (id: string): AppThunk => async (
     try {
       dispatch(setLoading(true))
       const data = todo.data
-      await update(id, { text: data.text, done: !data.done })
+      await todoAPI.updateTodo(id, { text: data.text, done: !data.done })
     } catch (error) {
       dispatch(setError(error))
     } finally {
       dispatch(setLoading(false))
     }
   }
-  // await add(data)
 }
 
-// export const { addTodo, toggleTodo, setTodos } = todosSlice.actions
+export const deleteTodo = (id: string): AppThunk => async dispatch => {
+  try {
+    dispatch(setLoading(true))
+    console.log(id)
+    await todoAPI.deleteTodo(id)
+  } catch (error) {
+    console.log(error)
+    dispatch(setError(error))
+  } finally {
+    dispatch(setLoading(false))
+  }
+}
+
 export const { setTodos, setLoading, setError } = todosSlice.actions
 
 export default todosSlice.reducer

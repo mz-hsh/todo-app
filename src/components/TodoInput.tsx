@@ -1,5 +1,6 @@
-import React, { useState, FormEvent, ChangeEvent, useRef } from 'react'
+import React, { ChangeEvent, MouseEvent, useRef, useState } from 'react'
 import useAddTodo from '../hooks/useAddTodo'
+import { Grid, TextField, Button } from '@material-ui/core'
 
 function TodoInput() {
   const [value, setValue] = useState('')
@@ -10,11 +11,11 @@ function TodoInput() {
     setValue(e.target.value)
   }
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
 
     if (!value) {
-      alert('할일 입력')
+      alert('Input todo')
     } else {
       addTodo(value)
       setValue('')
@@ -26,10 +27,27 @@ function TodoInput() {
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <input placeholder="Input" value={value} onChange={onChange} ref={ref} />
-      <button type="submit">등록</button>
-    </form>
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <TextField
+          label="Input"
+          fullWidth
+          onChange={onChange}
+          value={value}
+          inputRef={ref}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Button
+          fullWidth
+          color="primary"
+          variant="contained"
+          onClick={onSubmit}
+        >
+          Add
+        </Button>
+      </Grid>
+    </Grid>
   )
 }
 
